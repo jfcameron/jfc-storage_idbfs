@@ -4,3 +4,6 @@
 [submodule "extern/jfc-storage"]
 	path = extern/jfc-storage
 	url = https://github.com/jfcameron/jfc-storage.git
+[submodule "extern/jfc-storage_filesystem"]
+	path = extern/jfc-storage_filesystem
+	url = https://github.com/jfcameron/jfc-storage_filesystem.git

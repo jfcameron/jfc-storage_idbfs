@@ -1,0 +1,60 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "JFCSTORAGE_IDBFS_BUILD_TESTS": "ON",
+        "JFCSTORAGE_IDBFS_BUILD_DOCS": "OFF",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "linux-docs",
+      "displayName": "Linux / documentation",
+      "inherits": "base",
+      "cacheVariables": {
+        "JFCSTORAGE_IDBFS_BUILD_TESTS": "OFF",
+        "JFCSTORAGE_IDBFS_BUILD_DOCS": "ON"
+      }
+    },
+    {
+      "name": "emscripten",
+      "displayName": "Emscripten / wasm",
+      "description": "Configure with `emcmake cmake --preset emscripten`, which supplies the toolchain file. ctest runs the tests under node.",
+      "inherits": "base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fexceptions -Wall -Wextra",
+        "CMAKE_EXE_LINKER_FLAGS": "-fexceptions"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-docs",
+      "configurePreset": "linux-docs"
+    },
+    {
+      "name": "emscripten",
+      "configurePreset": "emscripten"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "emscripten",
+      "configurePreset": "emscripten",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

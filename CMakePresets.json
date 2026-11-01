@@ -36,6 +36,16 @@
         "CMAKE_CXX_FLAGS": "-fexceptions -Wall -Wextra",
         "CMAKE_EXE_LINKER_FLAGS": "-fexceptions"
       }
+    },
+    {
+      "name": "emscripten-ci",
+      "displayName": "Emscripten / CI",
+      "description": "Warnings are errors. CI only: a consumer's build should not fail on a warning we introduced, and ours should not survive one.",
+      "inherits": "emscripten",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fexceptions -Wall -Wextra -Werror",
+        "CMAKE_EXE_LINKER_FLAGS": "-fexceptions -Wno-limited-postlink-optimizations"
+      }
     }
   ],
   "buildPresets": [
@@ -46,12 +56,23 @@
     {
       "name": "emscripten",
       "configurePreset": "emscripten"
+    },
+    {
+      "name": "emscripten-ci",
+      "configurePreset": "emscripten-ci"
     }
   ],
   "testPresets": [
     {
       "name": "emscripten",
       "configurePreset": "emscripten",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "emscripten-ci",
+      "configurePreset": "emscripten-ci",
       "output": {
         "outputOnFailure": true
       }

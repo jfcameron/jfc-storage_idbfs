@@ -30,14 +30,21 @@ jobs:
       - name: report the toolchain
         run: emcc --version
 
+      - name: every header compiles alone, warnings are errors
+        run: |
+          for header in $(git ls-files 'include/*.h' | sed 's#^include/##'); do
+            printf '#include <%s>\nint main(){}\n' "$header" > alone.cpp
+            em++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -Iinclude -Iextern/jfc-storage_filesystem/extern/jfc-storage/include -c alone.cpp -o /dev/null
+          done
+
       - name: configure
-        run: emcmake cmake --preset emscripten
+        run: emcmake cmake --preset emscripten-ci
 
       - name: build
-        run: cmake --build --preset emscripten
+        run: cmake --build --preset emscripten-ci
 
       - name: test
-        run: ctest --preset emscripten
+        run: ctest --preset emscripten-ci
 
   interface-latest:
     name: emscripten, against the interface's latest commit
@@ -50,10 +57,10 @@ jobs:
 
       - name: take the interface's latest commit
         run: |
-          git -C extern/jfc-storage fetch origin HEAD
-          git -C extern/jfc-storage checkout --detach FETCH_HEAD
-          git -C extern/jfc-storage submodule update --init --recursive
-          git -C extern/jfc-storage log -1 --oneline
+          git -C extern/jfc-storage_filesystem/extern/jfc-storage fetch origin HEAD
+          git -C extern/jfc-storage_filesystem/extern/jfc-storage checkout --detach FETCH_HEAD
+          git -C extern/jfc-storage_filesystem/extern/jfc-storage submodule update --init --recursive
+          git -C extern/jfc-storage_filesystem/extern/jfc-storage log -1 --oneline
 
       - name: install ninja
         run: sudo apt-get update && sudo apt-get install -y ninja-build
